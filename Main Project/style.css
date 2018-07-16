@@ -4,3 +4,10 @@ html{
 body{
     padding-top: 10ex; 
 }
+.dataclasses {
+	display: flex;
+	flex-wrap: wrap;
+}
+.dataclasses > * {
+	margin:5px;
+}

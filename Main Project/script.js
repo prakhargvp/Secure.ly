@@ -1,7 +1,7 @@
 function checkEmail(){
     //read email
    
-    let email = document.querySelector("#id_email").value;
+    var email = document.querySelector("#id_email").value;
     
     //Email Validation
     if(!email || email === ""){
@@ -10,35 +10,31 @@ function checkEmail(){
     }
 
     //query URL
-    let queryURL = "http://localhost:3000/" + email;
+    var queryURL = "http://localhost:4000/" + email;
     
    
     //request ajax
     fetch(queryURL)
         .then(function (response) {
-            //return response
             return response.json();
-            alert("1");
         })
         .then(function (result) {
-            displayEmailResult(result);
-            alert("2");
+           displayEmailResult(result);
         })
         .catch(function (error) {
-            consone.log(error.message);
-            alert("3");
+            console.log(error.message);
         });
 }
 
 function displayEmailResult(result) {
     //hide email modal
 
-    $('#emailModal').madal('hide');
+    $('#emailModal').modal('hide');
 
     //get message div
-    let msgDiv = document.querySelector("#message");
+    var msgDiv = document.querySelector("#message");
     //select div result
-    let div = document.querySelector("#result");
+    var div = document.querySelector("#result");
 
     if(result.message) {
         //clear contents
@@ -64,40 +60,39 @@ function displayEmailResult(result) {
         
         //counter
         var i=0;
+        var hackedHTMLDiv = "";
         //loop through all the objects in result
         result.forEach(function(currentResult) {
-            let hackedHTMLDiv = `<div class="jumbotron" id="id"> \
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-4">
-                                            <h5>${currentResult.Title}: <small><a target="_blank" href="${currentResult.Domain}">website</a></small></h5>
-                                            <h5>Breach Date: <small>${currentResult.BreachDate}</small></h5>
-                                            <h5>Added: <small>${currentResult.AddedDate}</small></h5>
-                                            <h5>Modified: <small>${currentResult.ModifiedDate}</small></h5>
-                                        <div>
-                                        <div class="col-xs-12 col-sm-8">
-                                            <h5>${currentResult.Name}</h5>
-                                            <p>${currentResult.Description}</p>
-                                        </div>
-                                        <div class="col-xs-12" id="data_id_$(i)">
-                                            <h5>Compromised data</h5>
-                                        </div>
-                                    </div>
-                                </div>`;
-
-
-
-            $('#result').append(hackedHTMLDiv);
-
+            hackedHTMLDiv = $(`
+            <div class="jumbotron">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <h5>${currentResult.Title}: <small><a target="_blank" href="${currentResult.Domain}">website</a></small></h5>
+                        <h5>Breach Date: <small>${currentResult.BreachDate}</small></h5>
+                        <h5>Added: <small>${currentResult.AddedDate}</small></h5>
+                        <h5>Modified: <small>${currentResult.ModifiedDate}</small></h5>
+                    </div>
+                    <div class="col-xs-12 col-sm-8">
+                        <h5>${currentResult.Name}</h5>
+                        <p>${currentResult.Description}</p>
+                    </div>
+                    <div class="col-xs-12" id="data_id_${i}">
+                        <h5>Compromised data</h5>
+                        <div class="dataclasses"></div>
+                    </div>
+                </div>
+            </div>
+            `);
 
             currentResult.DataClasses.forEach(function(currentDataClass){
-
-                $(`#data_id_$(i)`).append(`<span class="label label-danger danger-label">${currentDataClass}</span>`);
+                hackedHTMLDiv.find("#data_id_"+i+" .dataclasses").append(`<span class="label label-danger danger-label">${currentDataClass}</span>`);
             });
 
+            $('.result').append(hackedHTMLDiv);
 
             i++;
         });
 
-        console.log(result);
+
     }
 }
